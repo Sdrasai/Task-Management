@@ -11,33 +11,43 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ColumnsService } from 'src/column/column.service';
 
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly columnService: ColumnsService,
+  ) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto) {
+    let columnId = await this.columnService.findOneByStatus(
+      createTaskDto.status,
+    );
+
+    let order = columnId[0].tasks.length + 1;
+    let createTaskDto2 = { ...createTaskDto, columnId: columnId[0], order };
+    return await this.taskService.create(createTaskDto2);
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  async findAll() {
+    return await this.taskService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.taskService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(id, updateTaskDto);
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    return await this.taskService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.delete(id);
+  async remove(@Param('id') id: string) {
+    return await this.taskService.delete(id);
   }
 }

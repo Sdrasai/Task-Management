@@ -1,17 +1,17 @@
-// src/schemas/task.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { status } from 'src/column/entities/column.entity';
 
 @Schema()
 export class Task extends Document {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   owner: string;
 
-  @Prop({ type: [Types.ObjectId], ref: 'Column' })
-  columnId: String;
+  @Prop({ type: Types.ObjectId, ref: 'Column' })
+  columnId: string;
 
   @Prop({ required: true })
   order: number;

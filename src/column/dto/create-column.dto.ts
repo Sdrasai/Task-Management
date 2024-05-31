@@ -1,6 +1,8 @@
-import { Prop } from '@nestjs/mongoose';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { status } from '../entities/column.entity';
 
 export class CreateColumnDto {
-  @Prop()
-  status: String;
+  @IsString()
+  @IsNotEmpty()
+  status: status;
 }

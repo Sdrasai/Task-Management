@@ -20,6 +20,7 @@ export class ColumnController {
 
   @Post()
   create(@Body() createColumnDto: CreateColumnDto) {
+    console.log(createColumnDto);
     return this.columnService.create(createColumnDto);
   }
 
