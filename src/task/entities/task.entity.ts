@@ -1,22 +1,20 @@
-import { Mongoose, Schema, Types, model } from 'mongoose';
+// src/schemas/task.schema.ts
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-enum status {
-  ToDo = 'TODO',
-  InProgress = 'INPROGRESS',
-  Completed = 'COMPLETED',
+@Schema()
+export class Task extends Document {
+  @Prop({ required: true })
+  description: string;
+
+  @Prop({ required: true })
+  owner: string;
+
+  @Prop({ required: true })
+  columnId: string;
+
+  @Prop({ required: true })
+  order: number;
 }
 
-export const taskSchema = new Schema(
-  {
-    owner: { type: Types.ObjectId, ref: 'User' },
-    description: { type: String },
-    status: { type: status, default: status.ToDo },
-  },
-  {
-    timestamps: true,
-  },
-);
-
-const taskModel = model('Task', taskSchema);
-
-export default taskModel;
+export const TaskSchema = SchemaFactory.createForClass(Task);
