@@ -10,6 +10,9 @@ import {
 import { ColumnsService } from './column.service';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
+import { status } from './entities/column.entity';
+import sendEmailNotification from 'src/utils/emailSender';
+import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 @Controller('column')
 export class ColumnController {
@@ -31,7 +34,15 @@ export class ColumnController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateColumnDto: UpdateColumnDto,
+    createTaskDto: CreateTaskDto,
+  ) {
+    const updatedStatus = updateColumnDto.status;
+    if (updatedStatus === status.Completed) {
+      sendEmailNotification(createTaskDto);
+    }
     return this.columnService.update(id, updateColumnDto);
   }
 
